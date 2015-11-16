@@ -12,6 +12,8 @@ class Heap():
             return None
         return (n-1)/2 
 
+    def min_child(self, n):
+        l = 2*n+1 
     def l_child(self, n):
         res = 2*n+1
         if res + 1 > len(self.hlist):
