@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import math
+import time
 
 
 class Heap():
@@ -12,31 +13,40 @@ class Heap():
             return None
         return (n-1)/2 
 
+    def swap(self, x, y):
+        tmp = self.hlist[x]
+        self.hlist[x] = self.hlist[y]
+        self.hlist[y] = tmp
+
     def min_child(self, n):
         l = 2*n+1 
-    def l_child(self, n):
-        res = 2*n+1
-        if res + 1 > len(self.hlist):
+        r = 2*n+2
+        num = len(self.hlist)
+        if l+1 > num and r+1 > num:
             return None
-        return res
-    
-    def r_child(self, n):
-        res = 2*n+2 
-        if res + 1> len(self.hlist):
-            return None
-        return res
+        elif l+1 > num and r+1 <= num:
+            return r
+        elif l+1 <= num and r+1 > num:
+            return l
+        elif self.hlist[r] > self.hlist[l]:
+            return l
+        else:
+            return r
 
     def get_min(self):
         res = self.hlist[0]
-        self.hlist[0] = self.hlist.pop()
+        last = self.hlist.pop()
+        if not self.hlist:
+            return res
+        self.hlist[0] = last
         n = 0
         while True:
-            l = self.l_child(n)
-            r = self.r_child(n)
-            if r != None and self.hlist[r] < self.hlist[n]:
-                self.swap(r,n)
-                n = r 
-        
+            m = self.min_child(n)
+            if m != None and self.hlist[m] < self.hlist[n]:
+                self.swap(n,m)
+                n = m
+            else:
+                return res
 
     def add(self, x):
         self.hlist.append(x)
@@ -52,7 +62,16 @@ class Heap():
             else:
                 break
          
-
     def __len__(self):
         return len(self.hlist)
-        
+    
+    
+if __name__ == "__main__":
+    lst = [2,34,1,52,3,6,321,1,5,26,2,4,1,0,12,3,45,1,34,23,26,10,29,13,18,20]
+    h = Heap()
+    for i in lst:
+        h.add(i)
+    
+    print h.hlist
+    for i in range(len(lst)):
+        print h.get_min()
